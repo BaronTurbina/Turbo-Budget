@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="pl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827"><link rel="manifest" href="manifest.json"><title>TURBO BGT</title>
+<style>
+:root{--bg:#05031a;--text:#f8f3ff;--muted:#b9b2da;--pink:#ff25b7;--cyan:#19e7ff;--purple:#9a55ff;--orange:#ffae43;--green:#25f5ad;--red:#ff3f72}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 8%,#571363 0,#21073f 28%,#090522 65%,#030216 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden}
+body:after{content:"";position:fixed;inset:0;z-index:-2;opacity:.35;background:linear-gradient(180deg,transparent 60%,#08051f),repeating-linear-gradient(90deg,transparent 0 49px,rgba(25,231,255,.10) 50px 51px),repeating-linear-gradient(0deg,transparent 0 39px,rgba(255,37,183,.10) 40px 41px);transform:perspective(500px) rotateX(58deg);transform-origin:bottom}
+.app{max-width:620px;margin:auto;padding:calc(12px + env(safe-area-inset-top)) 12px calc(95px + env(safe-area-inset-bottom))}.hero{position:relative;overflow:hidden;border:1px solid #8e2ad0;border-radius:24px;padding:16px;background:linear-gradient(145deg,rgba(9,7,38,.94),rgba(31,5,55,.86));box-shadow:0 0 35px rgba(255,37,183,.18)}
+.toprow{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.topicons{display:flex;gap:7px}.iconbtn{width:43px;height:43px;padding:0;background:rgba(9,5,35,.75);border:1px solid var(--pink);font-size:20px}.brand{font-size:34px;line-height:.85;font-weight:950;font-style:italic;letter-spacing:-2px;text-shadow:0 0 12px #ff25b7,0 0 28px #8f2cff}.brand span{color:var(--cyan)}.tagline{color:#ff72d0;font-weight:800;font-size:10px;letter-spacing:2px;margin-top:8px}.cycle{font-size:13px;color:#d8d1ff}.sub,.stat,.small{color:var(--muted);font-size:12px}
+.card{background:linear-gradient(145deg,rgba(14,8,43,.95),rgba(7,6,30,.95));border:1px solid #6c2ab0;border-radius:20px;padding:15px;margin-top:10px;box-shadow:0 0 22px rgba(255,37,183,.08)}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.money{font-weight:850;font-size:18px}.green{color:var(--green)}.red{color:var(--red)}
+.statgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:10px}.statcard{min-height:98px;padding:12px;border:1px solid #7430bd;border-radius:17px;background:linear-gradient(145deg,rgba(10,9,43,.93),rgba(35,7,54,.78))}.statlabel{font-size:11px;color:#c9c2e8}.statvalue{font-size:22px;font-weight:900;margin-top:8px}.cyan{color:var(--cyan)}.pink{color:var(--pink)}.gold{color:var(--orange)}
+button{border:1px solid #ff39bd;border-radius:13px;padding:11px 13px;font-size:14px;font-weight:850;background:linear-gradient(90deg,#ff1db4,#ff5c73);color:#fff;box-shadow:0 0 16px rgba(255,37,183,.18)}button.secondary{background:linear-gradient(135deg,rgba(20,9,54,.95),rgba(12,10,42,.95));color:#fff;border-color:#7430bd}button.danger{background:rgba(66,8,47,.8);color:#ff8ec7;border-color:#a82a7a}
+.tabs{display:flex;gap:7px;overflow:auto;padding:3px 1px 2px;margin-top:10px}.tab{white-space:nowrap;background:rgba(19,12,54,.92);color:#d8d1ff;border:1px solid #6530a5;padding:8px 12px;border-radius:999px;font-size:13px}.tab.active{background:linear-gradient(90deg,#ff2da8,#8c45ff);color:#fff}.actionsbar{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:7px;margin-top:10px}.actionsbar button{min-height:46px}.wide{grid-column:1/-1}
+.chartwrap{background:linear-gradient(180deg,rgba(4,9,38,.88),rgba(24,5,50,.72));border:1px solid #6527a7;border-radius:18px;padding:10px;margin-top:10px}.sectiontitle{font-size:15px;font-weight:900}canvas{display:block;width:100%;height:210px;background:transparent}
+.week{overflow:hidden}.week.current{border-color:var(--cyan);box-shadow:0 0 20px rgba(25,231,255,.14)}.week.over{border-color:#ff315f;box-shadow:0 0 26px rgba(255,49,95,.18)}.weeknum{min-width:62px;text-align:center;border:1px solid var(--pink);border-radius:13px;padding:7px;color:#ff7bd3;font-weight:900}.weekbody{flex:1}.progress{height:9px;background:#171532;border:1px solid #40376b;border-radius:99px;overflow:hidden;margin-top:8px}.bar{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--purple))}.overbar{background:linear-gradient(90deg,#ff2d91,#ff315f)}.overbox{display:flex;align-items:center;justify-content:flex-end;gap:7px;color:#ff456f;font-weight:950;font-size:20px;text-shadow:0 0 14px rgba(255,49,95,.65);margin-top:8px}.warningicon{font-size:30px}
+.notice{background:linear-gradient(135deg,rgba(26,10,59,.95),rgba(46,7,53,.92));border:1px solid #7b2bbd;color:#e9e2ff;border-radius:13px;padding:10px;font-size:12px;margin-top:9px}.expense{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(124,47,196,.35)}.expense-main{display:flex;align-items:center;min-width:0}.expense-icon{width:48px;height:42px;object-fit:cover;border-radius:8px;border:1px solid #7c2fc4;margin-right:9px;flex:none}.expense-main>div:last-child{min-width:0}
+.bottomnav{position:fixed;left:50%;transform:translateX(-50%);bottom:8px;width:min(620px,calc(100% - 16px));z-index:20;display:grid;grid-template-columns:repeat(6,1fr);gap:2px;padding:6px;background:rgba(5,3,26,.94);backdrop-filter:blur(16px);border:1px solid #7c2fc4;border-radius:20px;box-shadow:0 8px 30px rgba(0,0,0,.65),0 0 22px rgba(255,37,183,.13)}.bottomnav button{padding:7px 2px;min-height:52px;font-size:10px;background:transparent;border:0;box-shadow:none}.navicon{display:block;font-size:20px;margin-bottom:3px;color:#ff4fc5}
+.modal{position:fixed;inset:0;background:rgba(2,1,15,.82);display:none;align-items:flex-end;z-index:100;backdrop-filter:blur(7px)}.sheet{background:linear-gradient(160deg,#12072f,#08051e);color:#fff;width:100%;max-width:620px;margin:auto;border:1px solid #8a30cf;border-radius:22px 22px 0 0;padding:20px calc(20px + env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom));max-height:92dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y}label{display:block;font-size:13px;color:#bfb6e3;margin:10px 0 5px}input,select,textarea{width:100%;padding:13px;border:1px solid #6f2cb5;border-radius:12px;background:#0b0824;color:#fff;font-size:17px}.summarygrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.summaryitem{padding:10px;border:1px solid #6c2ab0;border-radius:12px;background:rgba(255,255,255,.03)}.lock{position:fixed;inset:0;background:#05031a;z-index:300;display:flex;align-items:center;justify-content:center;padding:25px}.lockbox{width:min(420px,100%);background:linear-gradient(145deg,#16083b,#08051e);padding:22px;border-radius:22px;border:1px solid #8a30cf}@media(min-width:700px){.statgrid{grid-template-columns:repeat(4,1fr)}}
+.catpicker{display:none;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px;max-height:50vh;overflow:auto}.catoption{padding:4px;background:#0a0724;border:1px solid #5a2a86;border-radius:13px;color:#fff;text-align:left}.catoption.active{border:2px solid #ff2da8;box-shadow:0 0 15px rgba(255,45,168,.35)}.catoption img{width:100%;aspect-ratio:1.08;object-fit:cover;border-radius:9px;display:block;margin-bottom:5px}.catoption span{display:block;text-align:center;font-size:11px;font-weight:900}.langrow{display:flex;align-items:center;gap:8px}.langflag{font-size:20px}.selectedcat{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#0d0924;border:1px solid #7c2fc4;color:#fff;padding:7px;border-radius:12px}.selectedcat img{width:54px;height:48px;object-fit:cover;border-radius:8px}
+</style>
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TURBO BURŻET">
+
+</head><body>
+<div id="lock" class="lock"><div class="lockbox" id="lockbox">
+<h1 id="lockTitle">🌴 TURBO BGT</h1><p class="sub">Dane są szyfrowane lokalnie. Ustaw hasło/PIN do aplikacji.</p>
+<label id="lockPassLabel">Hasło / PIN</label><input id="pass" type="password" autocomplete="new-password">
+<div class="actions"><button id="unlockBtn" onclick="unlock()">Odblokuj</button></div><div id="lockmsg" class="small"></div>
+</div></div>
+<div class="app" id="app" style="display:none"><section class="hero" id="top"><div class="toprow"><div><div class="brand">TURBO <span>BGT</span> <small style="font-size:16px;color:#ff9df0">v18</small></div><div class="tagline" id="tagline">PLANUJ • KONTROLUJ • REALIZUJ</div></div><div class="topicons"><button class="iconbtn" onclick="openEditMonth()">⚙</button><button class="iconbtn" onclick="toggleSummary()">☰</button></div></div><div id="monthArea"></div></section><div id="empty" class="card" style="display:none;text-align:center;padding:30px"><span id="emptyText">Brak miesiąca.</span><br><br><button id="emptyAddBtn" onclick="openMonth()">Dodaj miesiąc po wypłacie</button></div><details class="card summary" id="summaryPanel"><summary id="summaryTitle">📊 Podsumowania miesięcy / lat / tygodni</summary><div id="summaryContent" class="small" style="margin-top:12px"></div></details><nav class="bottomnav"><button onclick="scrollTopApp()"><span class="navicon">⌂</span><span id="navStart">Start</span></button><button onclick="openIncome()"><span class="navicon">▣</span><span id="navIncome">Wpłata</span></button><button onclick="openExpense()"><span class="navicon">▤</span><span id="navExpense">Wydatek</span></button><button onclick="toggleSummary()"><span class="navicon">◔</span><span id="navSummary">Podsum.</span></button><button onclick="scrollToTabs()"><span class="navicon">▣</span><span id="navMonths">Miesiące</span></button><button onclick="openEditMonth()"><span class="navicon">⚙</span><span id="navOptions">Ustawienia</span></button></nav></div>
+<div class="modal" id="monthModal"><div class="sheet"><div class="row"><h2 id="newPayTitle">Nowa wypłata</h2><button class="secondary" onclick="closeModal('monthModal')">✕</button></div>
+<label id="mMonthLabel">Miesiąc</label><select id="mMonth"></select>
+<label id="mYearLabel">Rok</label><select id="mYear"></select>
+<label id="mStartLabel">Dzień rozpoczęcia miesiąca budżetowego</label><input id="mStartDay" type="number" min="10" max="10" value="10" disabled>
+<div class="notice" id="monthRuleNotice">Tygodnie będą liczone od wybranego dnia jako <b>Tydzień 1, Tydzień 2, Tydzień 3...</b>. Okres kończy się zawsze 10. dnia kolejnego miesiąca.</div>
+<label id="mSalaryLabel">Wypłata</label><input id="mSalary" type="number" step=".01" placeholder="np. 10000">
+<label id="mSaveLabel">Cel oszczędności</label><input id="mSave" type="number" step=".01" value="2000">
+<label id="mFixedLabel">Stałe opłaty</label><input id="mFixed" type="number" step=".01" placeholder="np. 3500">
+<div class="notice" id="monthSavingNotice">Cel oszczędności trafia od razu do wspólnej puli. Reszta po opłatach dzieli się na kolejne tygodnie od wybranego dnia rozpoczęcia.</div>
+<div class="actions"><button id="mCreateBtn" onclick="addMonth()">Utwórz miesiąc</button></div></div></div>
+
+
+<div class="modal" id="editMonthModal"><div class="sheet">
+<div class="row"><h2 id="settingsTitle">⚙ Ustawienia</h2><button class="secondary" onclick="closeModal('editMonthModal')">✕</button></div>
+<label id="salaryLabel">Wypłata</label><input id="xSalary" type="number" step=".01">
+<label id="savingLabel">Cel oszczędności</label><input id="xSave" type="number" step=".01">
+<label id="fixedLabel">Stałe opłaty</label><input id="xFixed" type="number" step=".01">
+<div class="notice" id="editNotice">Zmiana celu oszczędności lub opłat przeliczy budżet pozostały na tygodnie.</div>
+<label id="languageLabel">🌐 Język aplikacji</label>
+<select id="languageSelect" onchange="changeLanguage(this.value)"></select>
+<div class="actions"><button id="saveSettingsBtn" onclick="editMonth()">Zapisz zmiany</button></div>
+<div class="card" style="margin-top:14px;border-color:#a82a7a"><div class="row"><div><b id="deleteMonthTitle">Usuń bieżący miesiąc</b><div class="small" id="deleteMonthHint">Usunięcie cofnie jego wpłatę do puli oszczędności i usunie wydatki tego cyklu.</div></div><button class="danger" id="deleteMonthBtn" onclick="deleteMonth()">Usuń miesiąc</button></div></div>
+</div></div>
+
+<div class="modal" id="fixedModal"><div class="sheet">
+<div class="row"><h2 id="fixedTitle">Stałe opłaty</h2><button class="secondary" onclick="closeModal('fixedModal')">✕</button></div>
+<label id="fNameLabel">Nazwa</label><input id="fName" placeholder="np. Czynsz">
+<label>Kwota</label><input id="fAmount" type="number" step=".01">
+<div class="actions"><button id="fAddBtn" onclick="addFixed()">Dodaj opłatę</button></div>
+<div id="fixedList"></div>
+</div></div>
+
+<div class="modal" id="incomeModal"><div class="sheet">
+<div class="row"><h2 id="incomeTitle">Dodaj wpłatę</h2><button class="secondary" onclick="closeModal('incomeModal')">✕</button></div>
+<label id="iAmountLabel">Kwota</label><input id="iAmount" type="number" step=".01" placeholder="np. 500">
+<label id="iDescLabel">Opis</label><input id="iDesc" placeholder="np. premia">
+<label id="iModeLabel">Co zrobić z wpłatą?</label><select id="iMode"><option id="iBudgetOpt" value="budget">Dodaj do budżetu bieżącego miesiąca</option><option id="iSaveOpt" value="saving">Dodaj do oszczędności</option></select>
+<div class="notice" id="incomeNotice">Dodatkowa wpłata do budżetu zwiększy środki na pozostałe tygodnie, zamiast zmieniać już zaksięgowane wydatki.</div>
+<div class="actions"><button id="iSaveBtn" onclick="addIncome()">Zapisz wpłatę</button></div>
+</div></div>
+
+<div class="modal" id="expenseModal"><div class="sheet"><div class="row"><h2 id="expenseTitle">Dodaj wydatek</h2><button class="secondary" onclick="closeModal('expenseModal')">✕</button></div>
+<label id="eWeekLabel">Tydzień</label><select id="eWeek"></select><label id="eAmountLabel">Kwota</label><input id="eAmount" type="number" step=".01" placeholder="np. 84.50">
+<label id="eSourceLabel">Pobierz z</label><select id="eSource" onchange="updateExpenseSourceUI()"><option value="budget">Bieżąca pula</option><option value="savings">Oszczędności</option></select>
+<div class="notice" id="eSourceNotice">Wydatek z oszczędności nie pomniejsza budżetu bieżącego tygodnia.</div>
+<label id="eWhatLabel">Na co?</label><input id="eDesc" placeholder="np. Biedronka"><label id="eCatLabel">Kategoria</label><input type="hidden" id="eCat" value="Paliwo">
+<button type="button" class="selectedcat" id="selectedCat" onclick="toggleCategoryPicker()"><img src="icons/paliwo.png"><span><b>Paliwo</b><small class="small">Wybierz kategorię</small></span><span style="margin-left:auto;font-size:20px">⌄</span></button>
+<div id="categoryPicker" class="catpicker"></div>
+<div id="serviceHint" class="notice" style="display:none">Dla „Usługi różne” wpisz w polu „Na co?” dokładny opis usługi.</div>
+<div class="actions"><button id="eSaveBtn" onclick="addExpense()">Zapisz wydatek</button></div></div></div>
+
+<script>
+const LANGS={
+ pl:{flag:'🇵🇱',name:'Polski', code:'pl-PL', dict:{
+  app:'TURBO BGT', tagline:'PLANUJ • KONTROLUJ • REALIZUJ', settings:'⚙ Ustawienia', salary:'Wypłata', saving:'Cel oszczędności', fixed:'Stałe opłaty', saveChanges:'Zapisz zmiany', language:'🌐 Język aplikacji', deleteMonth:'Usuń bieżący miesiąc', deleteHint:'Usunięcie cofnie jego wpłatę do puli oszczędności i usunie wydatki tego cyklu.', delete:'Usuń miesiąc', editNotice:'Zmiana celu oszczędności lub opłat przeliczy budżet pozostały na tygodnie.', unlock:'Odblokuj', lockHint:'Dane są szyfrowane lokalnie. Ustaw hasło/PIN do aplikacji.', pass:'Hasło / PIN', noMonth:'Brak miesiąca.', addMonthAfter:'Dodaj miesiąc po wypłacie', summaries:'📊 Podsumowania miesięcy / lat / tygodni', start:'Start', income:'Wpłata', expense:'Wydatek', summary:'Podsum.', months:'Miesiące', options:'Ustawienia', addMonth:'+ Miesiąc', currentCycle:'Bieżący cykl budżetowy', closedCycle:'🔒 Zamknięty cykl', week:'TYDZIEŃ', weekBudget:'Budżet tygodnia', spent:'Wydano', noExpenses:'Brak wydatków.', addExpense:'＋ DODAJ WYDATEK', incomeGoal:'▣ WPŁATA / CEL', fixedFees:'▤ STAŁE OPŁATY', closeMonth:'🔒 ZAMKNIJ MIESIĄC', monthClosed:'🔒 MIESIĄC ZAMKNIĘTY', pay:'Wypłata', savings:'Oszczędności', budgetLife:'Budżet na życie', left:'Pozostało', withdrawn:'⚠ Pobrano z puli oszczędności', chart:'▥ WYDATKI W BIEŻĄCYM MIESIĄCU', editPay:'✎ Edytuj wypłatę / cel', resetPool:'↺ Wyzeruj pulę', doSpend:'💳 DO WYDANIA', pool:'🐷 PULA OSZCZĘDNOŚCI', spentTotal:'💰 WYDANO', progress:'◔ POSTĘP', thisWeek:'w tym tygodniu', growing:'narastająco', of:'z', cycle:'cykl 10→10', over:'OVER LIMIT', excess:'przekroczenie', selected:'Wybrana kategoria', choose:'Wybierz kategorię', serviceHint:'Dla „Usługi różne” wpisz w polu „Na co?” dokładny opis usługi.', expenseTitle:'Dodaj wydatek', amount:'Kwota', source:'Pobierz z', currentPool:'Bieżąca pula', savingsSource:'Oszczędności', sourceNotice:'Wydatek z oszczędności nie pomniejsza budżetu bieżącego tygodnia.', what:'Na co?', category:'Kategoria', saveExpense:'Zapisz wydatek', weekLabel:'Tydzień', newPay:'Nowa wypłata', month:'Miesiąc', year:'Rok', startDay:'Dzień rozpoczęcia miesiąca budżetowego', createMonth:'Utwórz miesiąc', incomeTitle:'Dodaj wpłatę', description:'Opis', whatToDo:'Co zrobić z wpłatą?', toBudget:'Dodaj do budżetu bieżącego miesiąca', toSavings:'Dodaj do oszczędności', saveIncome:'Zapisz wpłatę', fixedTitle:'Stałe opłaty', name:'Nazwa', addFee:'Dodaj opłatę', yearTitle:'Rok', monthsTitle:'Miesiące', weeksTitle:'Ostatnie tygodnie', noWeeks:'Brak tygodni.', noData:'Brak danych.'}},
+ en:{flag:'🇬🇧',name:'English',code:'en-GB',dict:{app:'TURBO BGT',tagline:'PLAN • CONTROL • ACHIEVE',settings:'⚙ Settings',salary:'Paycheck',saving:'Savings target',fixed:'Fixed expenses',saveChanges:'Save changes',language:'🌐 App language',deleteMonth:'Delete current month',deleteHint:'Deleting reverses its savings contribution and removes this cycle’s expenses.',delete:'Delete month',editNotice:'Changing savings target or expenses recalculates the weekly budget.',unlock:'Unlock',lockHint:'Your data is encrypted locally. Set an app password/PIN.',pass:'Password / PIN',noMonth:'No month.',addMonthAfter:'Add month after paycheck',summaries:'📊 Month / year / week summaries',start:'Home',income:'Income',expense:'Expense',summary:'Summary',months:'Months',options:'Settings',addMonth:'+ Month',currentCycle:'Current budget cycle',closedCycle:'🔒 Closed cycle',week:'WEEK',weekBudget:'Weekly budget',spent:'Spent',noExpenses:'No expenses.',addExpense:'＋ ADD EXPENSE',incomeGoal:'▣ INCOME / GOAL',fixedFees:'▤ FIXED EXPENSES',closeMonth:'🔒 CLOSE MONTH',monthClosed:'🔒 MONTH CLOSED',pay:'Paycheck',savings:'Savings',budgetLife:'Living budget',left:'Remaining',withdrawn:'⚠ Taken from savings',chart:'▥ EXPENSES THIS MONTH',editPay:'✎ Edit paycheck / goal',resetPool:'↺ Reset savings pool',doSpend:'💳 TO SPEND',pool:'🐷 SAVINGS POOL',spentTotal:'💰 SPENT',progress:'◔ PROGRESS',thisWeek:'this week',growing:'total',of:'of',cycle:'10→10 cycle',over:'OVER LIMIT',excess:'over by',selected:'Selected category',choose:'Choose category',serviceHint:'For “Other services”, enter a description in “What?”.',expenseTitle:'Add expense',amount:'Amount',source:'Take from',currentPool:'Current pool',savingsSource:'Savings',sourceBudgetHint:'An expense from the current pool counts against the weekly budget.',sourceSavingsHint:'An expense paid from savings does not reduce the current weekly budget.',sourceNotice:'An expense paid from savings does not reduce the current weekly budget.',what:'What for?',category:'Category',saveExpense:'Save expense',weekLabel:'Week',newPay:'New paycheck',month:'Month',year:'Year',startDay:'Budget cycle start day',createMonth:'Create month',incomeTitle:'Add income',description:'Description',whatToDo:'What to do with income?',toBudget:'Add to current month budget',toSavings:'Add to savings',saveIncome:'Save income',fixedTitle:'Fixed expenses',name:'Name',addFee:'Add expense',yearTitle:'Year',monthsTitle:'Months',weeksTitle:'Recent weeks',noWeeks:'No weeks.',noData:'No data.'}},
+ cs:{flag:'🇨🇿',name:'Čeština',code:'cs-CZ',dict:{app:'TURBO BGT',tagline:'PLÁNUJ • KONTROLUJ • REALIZUJ',settings:'⚙ Nastavení',salary:'Výplata',saving:'Cíl spoření',fixed:'Fixní výdaje',saveChanges:'Uložit změny',language:'🌐 Jazyk aplikace',deleteMonth:'Smazat aktuální měsíc',deleteHint:'Smazání vrátí jeho příspěvek do úspor a odstraní výdaje tohoto cyklu.',delete:'Smazat měsíc',editNotice:'Změna cíle spoření nebo výdajů přepočítá týdenní rozpočet.',unlock:'Odemknout',lockHint:'Data jsou šifrována lokálně. Nastavte heslo/PIN.',pass:'Heslo / PIN',noMonth:'Žádný měsíc.',addMonthAfter:'Přidat měsíc po výplatě',summaries:'📊 Přehledy měsíců / let / týdnů',start:'Start',income:'Příjem',expense:'Výdaj',summary:'Souhrn',months:'Měsíce',options:'Nastavení',addMonth:'+ Měsíc',currentCycle:'Aktuální rozpočtový cyklus',closedCycle:'🔒 Uzavřený cyklus',week:'TÝDEN',weekBudget:'Týdenní rozpočet',spent:'Utraceno',noExpenses:'Žádné výdaje.',addExpense:'＋ PŘIDAT VÝDAJ',incomeGoal:'▣ PŘÍJEM / CÍL',fixedFees:'▤ FIXNÍ VÝDAJE',closeMonth:'🔒 UZAVŘÍT MĚSÍC',monthClosed:'🔒 MĚSÍC UZAVŘEN',pay:'Výplata',savings:'Úspory',budgetLife:'Rozpočet na život',left:'Zbývá',withdrawn:'⚠ Odebráno z úspor',chart:'▥ VÝDAJE V TOMTO MĚSÍCI',editPay:'✎ Upravit výplatu / cíl',resetPool:'↺ Vynulovat úspory',doSpend:'💳 K VYDÁNÍ',pool:'🐷 ÚSPORY',spentTotal:'💰 UTRACENO',progress:'◔ PRŮBĚH',thisWeek:'tento týden',growing:'celkem',of:'z',cycle:'cyklus 10→10',over:'OVER LIMIT',excess:'překročení',selected:'Vybraná kategorie',choose:'Vyberte kategorii',serviceHint:'U „Ostatní služby“ zadejte popis.',expenseTitle:'Přidat výdaj',amount:'Částka',what:'Na co?',category:'Kategorie',saveExpense:'Uložit výdaj',weekLabel:'Týden',newPay:'Nová výplata',month:'Měsíc',year:'Rok',startDay:'Den začátku rozpočtového měsíce',createMonth:'Vytvořit měsíc',incomeTitle:'Přidat příjem',description:'Popis',whatToDo:'Co s příjmem?',toBudget:'Přidat do rozpočtu',toSavings:'Přidat do úspor',saveIncome:'Uložit příjem',fixedTitle:'Fixní výdaje',name:'Název',addFee:'Přidat výdaj',yearTitle:'Rok',monthsTitle:'Měsíce',weeksTitle:'Poslední týdny',noWeeks:'Žádné týdny.',noData:'Žádná data.'}},
+ de:{flag:'🇩🇪',name:'Deutsch',code:'de-DE',dict:{}}, it:{flag:'🇮🇹',name:'Italiano',code:'it-IT',dict:{}}, fr:{flag:'🇫🇷',name:'Français',code:'fr-FR',dict:{}}, es:{flag:'🇪🇸',name:'Español',code:'es-ES',dict:{}}, pt:{flag:'🇵🇹',name:'Português',code:'pt-PT',dict:{}}, sv:{flag:'🇸🇪',name:'Svenska',code:'sv-SE',dict:{}}, no:{flag:'🇳🇴',name:'Norsk',code:'no-NO',dict:{}}, da:{flag:'🇩🇰',name:'Dansk',code:'da-DK',dict:{}}, nl:{flag:'🇳🇱',name:'Nederlands',code:'nl-NL',dict:{}}, csb:{flag:'🟦⬜',name:'Kaszëbsczi',code:'csb',dict:{}}
+};
+;
+const EXTRA_LANGS={
+ de:{tagline:'PLANEN • KONTROLLIEREN • UMSETZEN',settings:'⚙ Einstellungen',salary:'Gehalt',saving:'Sparziel',fixed:'Fixkosten',saveChanges:'Änderungen speichern',language:'🌐 App-Sprache',deleteMonth:'Aktuellen Monat löschen',deleteHint:'Beim Löschen wird der Sparbeitrag dieses Monats zurückgenommen und seine Ausgaben werden entfernt.',delete:'Monat löschen',editNotice:'Änderungen an Sparziel oder Fixkosten berechnen das Wochenbudget neu.',unlock:'Entsperren',lockHint:'Deine Daten werden lokal verschlüsselt. Lege ein Passwort/eine PIN fest.',pass:'Passwort / PIN',noMonth:'Kein Monat.',addMonthAfter:'Monat nach Gehalt hinzufügen',summaries:'📊 Monats-, Jahres- und Wochenübersichten',start:'Start',income:'Einzahlung',expense:'Ausgabe',summary:'Zusammenfassung',months:'Monate',options:'Einstellungen',addMonth:'+ Monat',currentCycle:'Aktueller Budgetzyklus',closedCycle:'🔒 Zyklus geschlossen',week:'WOCHE',weekBudget:'Wochenbudget',spent:'Ausgegeben',noExpenses:'Keine Ausgaben.',addExpense:'＋ AUSGABE HINZUFÜGEN',incomeGoal:'▣ EINZAHLUNG / ZIEL',fixedFees:'▤ FIXKOSTEN',closeMonth:'🔒 MONAT SCHLIESSEN',monthClosed:'🔒 MONAT GESCHLOSSEN',pay:'Gehalt',savings:'Ersparnisse',budgetLife:'Lebensbudget',left:'Übrig',withdrawn:'⚠ Aus Ersparnissen entnommen',chart:'▥ AUSGABEN IN DIESEM MONAT',editPay:'✎ Gehalt / Ziel bearbeiten',resetPool:'↺ Sparguthaben zurücksetzen',doSpend:'💳 ZUR VERFÜGUNG',pool:'🐷 SPARGUTHABEN',spentTotal:'💰 AUSGEGEBEN',progress:'◔ FORTSCHRITT',thisWeek:'diese Woche',growing:'gesamt',of:'von',cycle:'Zyklus 10→10',over:'OVER LIMIT',excess:'Überschreitung',selected:'Ausgewählte Kategorie',choose:'Kategorie wählen',serviceHint:'Bei „Sonstige Dienstleistungen“ bitte eine Beschreibung eingeben.',expenseTitle:'Ausgabe hinzufügen',amount:'Betrag',what:'Wofür?',category:'Kategorie',saveExpense:'Ausgabe speichern',weekLabel:'Woche',newPay:'Neues Gehalt',month:'Monat',year:'Jahr',startDay:'Starttag des Budgetmonats',createMonth:'Monat erstellen',incomeTitle:'Einzahlung hinzufügen',description:'Beschreibung',whatToDo:'Was mit der Einzahlung tun?',toBudget:'Zum aktuellen Monatsbudget hinzufügen',toSavings:'Zu den Ersparnissen hinzufügen',saveIncome:'Einzahlung speichern',fixedTitle:'Fixkosten',name:'Name',addFee:'Ausgabe hinzufügen',yearTitle:'Jahr',monthsTitle:'Monate',weeksTitle:'Letzte Wochen',noWeeks:'Keine Wochen.',noData:'Keine Daten.'},
+ it:{tagline:'PIANIFICA • CONTROLLA • REALIZZA',settings:'⚙ Impostazioni',salary:'Stipendio',saving:'Obiettivo risparmio',fixed:'Spese fisse',saveChanges:'Salva modifiche',language:'🌐 Lingua app',deleteMonth:'Elimina mese corrente',deleteHint:'L’eliminazione annulla il contributo al risparmio del mese e rimuove le spese del ciclo.',delete:'Elimina mese',editNotice:'La modifica del risparmio o delle spese fisse ricalcola il budget settimanale.',unlock:'Sblocca',lockHint:'I dati sono cifrati localmente. Imposta password/PIN.',pass:'Password / PIN',noMonth:'Nessun mese.',addMonthAfter:'Aggiungi mese dopo lo stipendio',summaries:'📊 Riepiloghi mesi / anni / settimane',start:'Home',income:'Entrata',expense:'Spesa',summary:'Riepilogo',months:'Mesi',options:'Impostazioni',addMonth:'+ Mese',currentCycle:'Ciclo di budget corrente',closedCycle:'🔒 Ciclo chiuso',week:'SETTIMANA',weekBudget:'Budget settimanale',spent:'Speso',noExpenses:'Nessuna spesa.',addExpense:'＋ AGGIUNGI SPESA',incomeGoal:'▣ ENTRATA / OBIETTIVO',fixedFees:'▤ SPESE FISSE',closeMonth:'🔒 CHIUDI MESE',monthClosed:'🔒 MESE CHIUSO',pay:'Stipendio',savings:'Risparmi',budgetLife:'Budget disponibile',left:'Rimanente',withdrawn:'⚠ Prelevato dai risparmi',chart:'▥ SPESE DEL MESE',editPay:'✎ Modifica stipendio / obiettivo',resetPool:'↺ Azzera risparmi',doSpend:'💳 DA SPENDERE',pool:'🐷 RISPARMI',spentTotal:'💰 SPESO',progress:'◔ PROGRESSO',thisWeek:'questa settimana',growing:'totale',of:'di',cycle:'ciclo 10→10',over:'OVER LIMIT',excess:'superamento',selected:'Categoria selezionata',choose:'Scegli categoria',serviceHint:'Per “Servizi vari” inserisci una descrizione.',expenseTitle:'Aggiungi spesa',amount:'Importo',what:'Per cosa?',category:'Categoria',saveExpense:'Salva spesa',weekLabel:'Settimana',newPay:'Nuovo stipendio',month:'Mese',year:'Anno',startDay:'Giorno di inizio del mese budget',createMonth:'Crea mese',incomeTitle:'Aggiungi entrata',description:'Descrizione',whatToDo:'Cosa fare con l’entrata?',toBudget:'Aggiungi al budget del mese',toSavings:'Aggiungi ai risparmi',saveIncome:'Salva entrata',fixedTitle:'Spese fisse',name:'Nome',addFee:'Aggiungi spesa',yearTitle:'Anno',monthsTitle:'Mesi',weeksTitle:'Ultime settimane',noWeeks:'Nessuna settimana.',noData:'Nessun dato.'},
+ fr:{tagline:'PLANIFIEZ • CONTRÔLEZ • RÉALISEZ',settings:'⚙ Paramètres',salary:'Salaire',saving:'Objectif d’épargne',fixed:'Dépenses fixes',saveChanges:'Enregistrer',language:'🌐 Langue de l’application',deleteMonth:'Supprimer le mois actuel',deleteHint:'La suppression annule sa contribution à l’épargne et supprime les dépenses du cycle.',delete:'Supprimer le mois',editNotice:'La modification de l’épargne ou des charges recalcule le budget hebdomadaire.',unlock:'Déverrouiller',lockHint:'Vos données sont chiffrées localement. Définissez un mot de passe/PIN.',pass:'Mot de passe / PIN',noMonth:'Aucun mois.',addMonthAfter:'Ajouter un mois après le salaire',summaries:'📊 Synthèses mois / années / semaines',start:'Accueil',income:'Entrée',expense:'Dépense',summary:'Résumé',months:'Mois',options:'Paramètres',addMonth:'+ Mois',currentCycle:'Cycle budgétaire actuel',closedCycle:'🔒 Cycle fermé',week:'SEMAINE',weekBudget:'Budget hebdomadaire',spent:'Dépensé',noExpenses:'Aucune dépense.',addExpense:'＋ AJOUTER UNE DÉPENSE',incomeGoal:'▣ ENTRÉE / OBJECTIF',fixedFees:'▤ DÉPENSES FIXES',closeMonth:'🔒 FERMER LE MOIS',monthClosed:'🔒 MOIS FERMÉ',pay:'Salaire',savings:'Épargne',budgetLife:'Budget disponible',left:'Restant',withdrawn:'⚠ Pris sur l’épargne',chart:'▥ DÉPENSES DU MOIS',editPay:'✎ Modifier salaire / objectif',resetPool:'↺ Réinitialiser l’épargne',doSpend:'💳 À DÉPENSER',pool:'🐷 ÉPARGNE',spentTotal:'💰 DÉPENSÉ',progress:'◔ PROGRÈS',thisWeek:'cette semaine',growing:'total',of:'sur',cycle:'cycle 10→10',over:'OVER LIMIT',excess:'dépassement',selected:'Catégorie sélectionnée',choose:'Choisir une catégorie',serviceHint:'Pour « Services divers », ajoutez une description.',expenseTitle:'Ajouter une dépense',amount:'Montant',what:'Pour quoi ?',category:'Catégorie',saveExpense:'Enregistrer la dépense',weekLabel:'Semaine',newPay:'Nouveau salaire',month:'Mois',year:'Année',startDay:'Jour de début du mois budgétaire',createMonth:'Créer le mois',incomeTitle:'Ajouter une entrée',description:'Description',whatToDo:'Que faire avec l’entrée ?',toBudget:'Ajouter au budget du mois',toSavings:'Ajouter à l’épargne',saveIncome:'Enregistrer',fixedTitle:'Dépenses fixes',name:'Nom',addFee:'Ajouter une dépense',yearTitle:'Année',monthsTitle:'Mois',weeksTitle:'Dernières semaines',noWeeks:'Aucune semaine.',noData:'Aucune donnée.'},
+ es:{tagline:'PLANIFICA • CONTROLA • REALIZA',settings:'⚙ Ajustes',salary:'Sueldo',saving:'Objetivo de ahorro',fixed:'Gastos fijos',saveChanges:'Guardar cambios',language:'🌐 Idioma de la app',deleteMonth:'Eliminar mes actual',deleteHint:'Al eliminarlo se revierte su aporte al ahorro y se eliminan los gastos del ciclo.',delete:'Eliminar mes',editNotice:'Cambiar el ahorro o los gastos fijos recalcula el presupuesto semanal.',unlock:'Desbloquear',lockHint:'Tus datos están cifrados localmente. Define una contraseña/PIN.',pass:'Contraseña / PIN',noMonth:'Sin mes.',addMonthAfter:'Añadir mes después del sueldo',summaries:'📊 Resúmenes de meses / años / semanas',start:'Inicio',income:'Ingreso',expense:'Gasto',summary:'Resumen',months:'Meses',options:'Ajustes',addMonth:'+ Mes',currentCycle:'Ciclo presupuestario actual',closedCycle:'🔒 Ciclo cerrado',week:'SEMANA',weekBudget:'Presupuesto semanal',spent:'Gastado',noExpenses:'Sin gastos.',addExpense:'＋ AÑADIR GASTO',incomeGoal:'▣ INGRESO / OBJETIVO',fixedFees:'▤ GASTOS FIJOS',closeMonth:'🔒 CERRAR MES',monthClosed:'🔒 MES CERRADO',pay:'Sueldo',savings:'Ahorros',budgetLife:'Presupuesto disponible',left:'Restante',withdrawn:'⚠ Tomado de los ahorros',chart:'▥ GASTOS DEL MES',editPay:'✎ Editar sueldo / objetivo',resetPool:'↺ Restablecer ahorros',doSpend:'💳 PARA GASTAR',pool:'🐷 AHORROS',spentTotal:'💰 GASTADO',progress:'◔ PROGRESO',thisWeek:'esta semana',growing:'total',of:'de',cycle:'ciclo 10→10',over:'OVER LIMIT',excess:'exceso',selected:'Categoría seleccionada',choose:'Elegir categoría',serviceHint:'En «Servicios varios» escribe una descripción.',expenseTitle:'Añadir gasto',amount:'Importe',what:'¿Para qué?',category:'Categoría',saveExpense:'Guardar gasto',weekLabel:'Semana',newPay:'Nuevo sueldo',month:'Mes',year:'Año',startDay:'Día de inicio del mes presupuestario',createMonth:'Crear mes',incomeTitle:'Añadir ingreso',description:'Descripción',whatToDo:'¿Qué hacer con el ingreso?',toBudget:'Añadir al presupuesto del mes',toSavings:'Añadir a ahorros',saveIncome:'Guardar ingreso',fixedTitle:'Gastos fijos',name:'Nombre',addFee:'Añadir gasto',yearTitle:'Año',monthsTitle:'Meses',weeksTitle:'Últimas semanas',noWeeks:'Sin semanas.',noData:'Sin datos.'},
+ pt:{tagline:'PLANEIE • CONTROLE • REALIZE',settings:'⚙ Definições',salary:'Salário',saving:'Meta de poupança',fixed:'Despesas fixas',saveChanges:'Guardar alterações',language:'🌐 Idioma da app',deleteMonth:'Eliminar mês atual',deleteHint:'A eliminação reverte a contribuição para a poupança e remove as despesas do ciclo.',delete:'Eliminar mês',editNotice:'Alterar a poupança ou despesas fixas recalcula o orçamento semanal.',unlock:'Desbloquear',lockHint:'Os seus dados são cifrados localmente. Defina uma palavra-passe/PIN.',pass:'Palavra-passe / PIN',noMonth:'Sem mês.',addMonthAfter:'Adicionar mês após o salário',summaries:'📊 Resumos de meses / anos / semanas',start:'Início',income:'Entrada',expense:'Despesa',summary:'Resumo',months:'Meses',options:'Definições',addMonth:'+ Mês',currentCycle:'Ciclo de orçamento atual',closedCycle:'🔒 Ciclo fechado',week:'SEMANA',weekBudget:'Orçamento semanal',spent:'Gasto',noExpenses:'Sem despesas.',addExpense:'＋ ADICIONAR DESPESA',incomeGoal:'▣ ENTRADA / META',fixedFees:'▤ DESPESAS FIXAS',closeMonth:'🔒 FECHAR MÊS',monthClosed:'🔒 MÊS FECHADO',pay:'Salário',savings:'Poupança',budgetLife:'Orçamento disponível',left:'Restante',withdrawn:'⚠ Retirado da poupança',chart:'▥ DESPESAS DO MÊS',editPay:'✎ Editar salário / meta',resetPool:'↺ Zerar poupança',doSpend:'💳 PARA GASTAR',pool:'🐷 POUPANÇA',spentTotal:'💰 GASTO',progress:'◔ PROGRESSO',thisWeek:'esta semana',growing:'total',of:'de',cycle:'ciclo 10→10',over:'OVER LIMIT',excess:'excesso',selected:'Categoria selecionada',choose:'Escolher categoria',serviceHint:'Em «Serviços diversos», introduza uma descrição.',expenseTitle:'Adicionar despesa',amount:'Valor',what:'Para quê?',category:'Categoria',saveExpense:'Guardar despesa',weekLabel:'Semana',newPay:'Novo salário',month:'Mês',year:'Ano',startDay:'Dia de início do mês de orçamento',createMonth:'Criar mês',incomeTitle:'Adicionar entrada',description:'Descrição',whatToDo:'O que fazer com a entrada?',toBudget:'Adicionar ao orçamento do mês',toSavings:'Adicionar à poupança',saveIncome:'Guardar entrada',fixedTitle:'Despesas fixas',name:'Nome',addFee:'Adicionar despesa',yearTitle:'Ano',monthsTitle:'Meses',weeksTitle:'Últimas semanas',noWeeks:'Sem semanas.',noData:'Sem dados.'},
+ nl:{tagline:'PLAN • CONTROLEER • REALISEER',settings:'⚙ Instellingen',salary:'Salaris',saving:'Spaardoel',fixed:'Vaste lasten',saveChanges:'Wijzigingen opslaan',language:'🌐 App-taal',deleteMonth:'Huidige maand verwijderen',deleteHint:'Verwijderen draait de spaarbijdrage terug en verwijdert de uitgaven van deze cyclus.',delete:'Maand verwijderen',editNotice:'Wijzigingen in sparen of vaste lasten herberekenen het weekbudget.',unlock:'Ontgrendelen',lockHint:'Je gegevens zijn lokaal versleuteld. Stel een wachtwoord/PIN in.',pass:'Wachtwoord / PIN',noMonth:'Geen maand.',addMonthAfter:'Maand toevoegen na salaris',summaries:'📊 Maand-, jaar- en weekoverzichten',start:'Start',income:'Inkomst',expense:'Uitgave',summary:'Overzicht',months:'Maanden',options:'Instellingen',addMonth:'+ Maand',currentCycle:'Huidige budgetcyclus',closedCycle:'🔒 Cyclus gesloten',week:'WEEK',weekBudget:'Weekbudget',spent:'Uitgegeven',noExpenses:'Geen uitgaven.',addExpense:'＋ UITGAVE TOEVOEGEN',incomeGoal:'▣ INKOMST / DOEL',fixedFees:'▤ VASTE LASTEN',closeMonth:'🔒 MAAND SLUITEN',monthClosed:'🔒 MAAND GESLOTEN',pay:'Salaris',savings:'Spaargeld',budgetLife:'Leefbudget',left:'Over',withdrawn:'⚠ Uit spaargeld gehaald',chart:'▥ UITGAVEN DEZE MAAND',editPay:'✎ Salaris / doel bewerken',resetPool:'↺ Spaargeld resetten',doSpend:'💳 TE BESTEDEN',pool:'🐷 SPAARGELD',spentTotal:'💰 UITGEGEVEN',progress:'◔ VOORTGANG',thisWeek:'deze week',growing:'totaal',of:'van',cycle:'cyclus 10→10',over:'OVER LIMIT',excess:'overschrijding',selected:'Geselecteerde categorie',choose:'Kies categorie',serviceHint:'Voer bij “Diverse diensten” een beschrijving in.',expenseTitle:'Uitgave toevoegen',amount:'Bedrag',what:'Waarvoor?',category:'Categorie',saveExpense:'Uitgave opslaan',weekLabel:'Week',newPay:'Nieuw salaris',month:'Maand',year:'Jaar',startDay:'Startdag budgetmaand',createMonth:'Maand maken',incomeTitle:'Inkomst toevoegen',description:'Beschrijving',whatToDo:'Wat met de inkomst?',toBudget:'Aan budget huidige maand toevoegen',toSavings:'Aan spaargeld toevoegen',saveIncome:'Inkomst opslaan',fixedTitle:'Vaste lasten',name:'Naam',addFee:'Uitgave toevoegen',yearTitle:'Jaar',monthsTitle:'Maanden',weeksTitle:'Laatste weken',noWeeks:'Geen weken.',noData:'Geen gegevens.'},
+ sv:{tagline:'PLANERA • KONTROLLERA • GENOMFÖR',settings:'⚙ Inställningar',salary:'Lön',saving:'Sparmål',fixed:'Fasta utgifter',saveChanges:'Spara ändringar',language:'🌐 Appspråk',deleteMonth:'Ta bort aktuell månad',deleteHint:'Borttagning återför månadens sparbidrag och tar bort cykelns utgifter.',delete:'Ta bort månad',editNotice:'Ändring av sparmål eller fasta utgifter räknar om veckobudgeten.',unlock:'Lås upp',lockHint:'Dina data krypteras lokalt. Ange lösenord/PIN.',pass:'Lösenord / PIN',noMonth:'Ingen månad.',addMonthAfter:'Lägg till månad efter lön',summaries:'📊 Månads-, års- och veckosammanfattningar',start:'Start',income:'Inkomst',expense:'Utgift',summary:'Sammanfattning',months:'Månader',options:'Inställningar',addMonth:'+ Månad',currentCycle:'Aktuell budgetcykel',closedCycle:'🔒 Stängd cykel',week:'VECKA',weekBudget:'Veckobudget',spent:'Förbrukat',noExpenses:'Inga utgifter.',addExpense:'＋ LÄGG TILL UTGIFT',incomeGoal:'▣ INKOMST / MÅL',fixedFees:'▤ FASTA UTGIFTER',closeMonth:'🔒 STÄNG MÅNAD',monthClosed:'🔒 MÅNAD STÄNGD',pay:'Lön',savings:'Sparande',budgetLife:'Disponibel budget',left:'Kvar',withdrawn:'⚠ Taget från sparandet',chart:'▥ UTGIFTER DENNA MÅNAD',editPay:'✎ Redigera lön / mål',resetPool:'↺ Nollställ sparande',doSpend:'💳 ATT SPENDERA',pool:'🐷 SPARANDE',spentTotal:'💰 FÖRBRUKAT',progress:'◔ FRAMSTEG',thisWeek:'denna vecka',growing:'totalt',of:'av',cycle:'cykel 10→10',over:'OVER LIMIT',excess:'överskridning',selected:'Vald kategori',choose:'Välj kategori',serviceHint:'För “Övriga tjänster”, ange en beskrivning.',expenseTitle:'Lägg till utgift',amount:'Belopp',what:'Vad gäller det?',category:'Kategori',saveExpense:'Spara utgift',weekLabel:'Vecka',newPay:'Ny lön',month:'Månad',year:'År',startDay:'Startdag för budgetmånad',createMonth:'Skapa månad',incomeTitle:'Lägg till inkomst',description:'Beskrivning',whatToDo:'Vad ska göras med inkomsten?',toBudget:'Lägg till i aktuell månads budget',toSavings:'Lägg till sparande',saveIncome:'Spara inkomst',fixedTitle:'Fasta utgifter',name:'Namn',addFee:'Lägg till utgift',yearTitle:'År',monthsTitle:'Månader',weeksTitle:'Senaste veckor',noWeeks:'Inga veckor.',noData:'Inga data.'},
+ no:{tagline:'PLANLEGG • KONTROLLER • REALISER',settings:'⚙ Innstillinger',salary:'Lønn',saving:'Sparemål',fixed:'Faste utgifter',saveChanges:'Lagre endringer',language:'🌐 Appspråk',deleteMonth:'Slett gjeldende måned',deleteHint:'Sletting reverserer månedens sparing og fjerner utgiftene i syklusen.',delete:'Slett måned',editNotice:'Endring av sparemål eller faste utgifter beregner ukesbudsjettet på nytt.',unlock:'Lås opp',lockHint:'Dataene dine krypteres lokalt. Angi passord/PIN.',passord:'Passord / PIN',pass:'Passord / PIN',noMonth:'Ingen måned.',addMonthAfter:'Legg til måned etter lønn',summaries:'📊 Måneds-, års- og ukeoversikter',start:'Start',income:'Inntekt',expense:'Utgift',summary:'Oppsummering',months:'Måneder',options:'Innstillinger',addMonth:'+ Måned',currentCycle:'Gjeldende budsjettperiode',closedCycle:'🔒 Lukket periode',week:'UKE',weekBudget:'Ukesbudsjett',spent:'Brukt',noExpenses:'Ingen utgifter.',addExpense:'＋ LEGG TIL UTGIFT',incomeGoal:'▣ INNTEKT / MÅL',fixedFees:'▤ FASTE UTGIFTER',closeMonth:'🔒 LUKK MÅNED',monthClosed:'🔒 MÅNED LUKKET',pay:'Lønn',savings:'Sparing',budgetLife:'Disponibelt budsjett',left:'Gjenstår',withdrawn:'⚠ Tatt fra sparing',chart:'▥ UTGIFTER DENNE MÅNEDEN',editPay:'✎ Rediger lønn / mål',resetPool:'↺ Nullstill sparing',doSpend:'💳 TIL Å BRUKE',pool:'🐷 SPARING',spentTotal:'💰 BRUKT',progress:'◔ FREMGANG',thisWeek:'denne uken',growing:'totalt',of:'av',cycle:'periode 10→10',over:'OVER LIMIT',excess:'overskridelse',selected:'Valgt kategori',choose:'Velg kategori',serviceHint:'For “Andre tjenester”, skriv en beskrivelse.',expenseTitle:'Legg til utgift',amount:'Beløp',what:'Hva gjelder det?',category:'Kategori',saveExpense:'Lagre utgift',weekLabel:'Uke',newPay:'Ny lønn',month:'Måned',year:'År',startDay:'Startdag for budsjettmåned',createMonth:'Opprett måned',incomeTitle:'Legg til inntekt',description:'Beskrivelse',whatToDo:'Hva skal gjøres med inntekten?',toBudget:'Legg til i gjeldende månedsbudsjett',toSavings:'Legg til sparing',saveIncome:'Lagre inntekt',fixedTitle:'Faste utgifter',name:'Navn',addFee:'Legg til utgift',yearTitle:'År',monthsTitle:'Måneder',weeksTitle:'Siste uker',noWeeks:'Ingen uker.',noData:'Ingen data.'},
+ da:{tagline:'PLANLÆG • KONTROLLÉR • REALISÉR',settings:'⚙ Indstillinger',salary:'Løn',saving:'Sparemål',fixed:'Faste udgifter',saveChanges:'Gem ændringer',language:'🌐 App-sprog',deleteMonth:'Slet nuværende måned',deleteHint:'Sletning tilbagefører månedens opsparing og fjerner cyklussens udgifter.',delete:'Slet måned',editNotice:'Ændring af opsparing eller faste udgifter genberegner uge­budgettet.',unlock:'Lås op',lockHint:'Dine data krypteres lokalt. Angiv adgangskode/PIN.',pass:'Adgangskode / PIN',noMonth:'Ingen måned.',addMonthAfter:'Tilføj måned efter løn',summaries:'📊 Måned-, års- og ugeoversigter',start:'Start',income:'Indtægt',expense:'Udgift',summary:'Oversigt',months:'Måneder',options:'Indstillinger',addMonth:'+ Måned',currentCycle:'Nuværende budgetcyklus',closedCycle:'🔒 Lukket cyklus',week:'UGE',weekBudget:'Ugebudget',spent:'Brugt',noExpenses:'Ingen udgifter.',addExpense:'＋ TILFØJ UDGIFT',incomeGoal:'▣ INDTÆGT / MÅL',fixedFees:'▤ FASTE UDGIFTER',closeMonth:'🔒 LUK MÅNED',monthClosed:'🔒 MÅNED LUKKET',pay:'Løn',savings:'Opsparing',budgetLife:'Disponibelt budget',left:'Tilbage',withdrawn:'⚠ Taget fra opsparing',chart:'▥ UDGIFTER DENNE MÅNED',editPay:'✎ Rediger løn / mål',resetPool:'↺ Nulstil opsparing',doSpend:'💳 TIL AT BRUGE',pool:'🐷 OPSPARING',spentTotal:'💰 BRUGT',progress:'◔ FREMGANG',thisWeek:'denne uge',growing:'i alt',of:'af',cycle:'cyklus 10→10',over:'OVER LIMIT',excess:'overskridelse',selected:'Valgt kategori',choose:'Vælg kategori',serviceHint:'For “Andre tjenester”, skriv en beskrivelse.',expenseTitle:'Tilføj udgift',amount:'Beløb',what:'Hvad til?',category:'Kategori',saveExpense:'Gem udgift',weekLabel:'Uge',newPay:'Ny løn',month:'Måned',year:'År',startDay:'Startdag for budgetmåned',createMonth:'Opret måned',incomeTitle:'Tilføj indtægt',description:'Beskrivelse',whatToDo:'Hvad skal der ske med indtægten?',toBudget:'Føj til aktuelt månedsbudget',toSavings:'Føj til opsparing',saveIncome:'Gem indtægt',fixedTitle:'Faste udgifter',name:'Navn',addFee:'Tilføj udgift',yearTitle:'År',monthsTitle:'Måneder',weeksTitle:'Seneste uger',noWeeks:'Ingen uger.',noData:'Ingen data.'},
+ csb:{tagline:'PLANÙJ • KONTROLÙJ • REALIZÙJ',settings:'⚙ Nastôwë',salary:'Wëpłata',saving:'Cél oszczãdzaniô',fixed:'Stôłé wëdatczi',saveChanges:'Zapisz zmianë',language:'🌐 Mòwa aplikacji',deleteMonth:'Rëmôj aktualny miesąc',deleteHint:'Rëmniãcé cofnie jegò wpłatë do pùlë oszczãdnotë i wëmaże wëdatczi tegò cyklu.',delete:'Rëmôj miesąc',editNotice:'Zmiana célu oszczãdzaniô abò stôłëch wëdatków przeliczi tygodniowi budżet.',unlock:'Òdemknij',lockHint:'Dane są lokalno szifrowóné. Nastôw hasło/PIN.',pass:'Hasło / PIN',noMonth:'Ni ma miesąca.',addMonthAfter:'Dodôj miesąc pò wëpłace',summaries:'📊 Pòdsumòwaniô miesąców / latów / tidzëniów',start:'Start',income:'Wpłata',expense:'Wëdatk',summary:'Pòdsumòwanié',months:'Miesące',options:'Nastôwë',addMonth:'+ Miesąc',currentCycle:'Aktualny cykl budżetowi',closedCycle:'🔒 Zamkłóny cykl',week:'TIDZÉŃ',weekBudget:'Tidzéńowi budżet',spent:'Wëdóné',noExpenses:'Ni ma wëdatków.',addExpense:'＋ DODÔJ WËDATK',incomeGoal:'▣ WPŁATA / CÉL',fixedFees:'▤ STÔŁÉ WËDATCZI',closeMonth:'🔒 ZAMKNI MIESĄC',monthClosed:'🔒 MIESĄC ZAMKŁÓNY',pay:'Wëpłata',savings:'Oszczãdnotë',budgetLife:'Budżet do wëdaniô',left:'Zostôło',withdrawn:'⚠ Wëjãté z oszczãdnotë',chart:'▥ WËDATCZI W TYM MIESĄCU',editPay:'✎ Zmieni wëpłatã / cél',resetPool:'↺ Wëzeruj pùlã',doSpend:'💳 DO WËDANIÔ',pool:'🐷 PÙLA OSZCZÃDNOTË',spentTotal:'💰 WËDÓNÉ',progress:'◔ POSTÃP',thisWeek:'w tim tidzéniu',growing:'razã',of:'z',cycle:'cykl 10→10',over:'OVER LIMIT',excess:'przekroczenié',selected:'Wëbrónô kategorëjô',choose:'Wëbierz kategorëjã',serviceHint:'Przë „Różné ùsłëdżi” wpisz òpis.',expenseTitle:'Dodôj wëdatk',amount:'Kwòta',what:'Na co?',category:'Kategorëjô',saveExpense:'Zapisz wëdatk',weekLabel:'Tidzéń',newPay:'Nowô wëpłata',month:'Miesąc',year:'Rok',startDay:'Dzeń startu miesąca budżetowégò',createMonth:'Ùsôdz miesąc',incomeTitle:'Dodôj wpłatã',description:'Òpis',whatToDo:'Co zrobic z wpłatą?',toBudget:'Dodôj do budżetu tegò miesąca',toSavings:'Dodôj do oszczãdnotë',saveIncome:'Zapisz wpłatã',fixedTitle:'Stôłé wëdatczi',name:'Miono',addFee:'Dodôj wëdatk',yearTitle:'Rok',monthsTitle:'Miesące',weeksTitle:'Slédné tidzénie',noWeeks:'Ni ma tidzéniów.',noData:'Ni ma danëch.'}
+};
+Object.entries(EXTRA_LANGS).forEach(([k,v])=>{if(LANGS[k])LANGS[k].dict=Object.assign({},LANGS.pl.dict,v);});
+LANGS.pl.dict=Object.assign({},LANGS.pl.dict);
+function catLabel(cat){const map={Paliwo:{en:'Fuel',de:'Kraftstoff',it:'Carburante',fr:'Carburant',es:'Combustible',pt:'Combustível',sv:'Bränsle',no:'Drivstoff',da:'Brændstof',nl:'Brandstof',csb:'Paliwa'},Zakupy:{en:'Shopping',de:'Einkäufe',it:'Spesa',fr:'Achats',es:'Compras',pt:'Compras',sv:'Inköp',no:'Innkjøp',da:'Indkøb',nl:'Boodschappen',csb:'Kùpùnczi'},Ubranie:{en:'Clothing',de:'Kleidung',it:'Abbigliamento',fr:'Vêtements',es:'Ropa',pt:'Roupa',sv:'Kläder',no:'Klær',da:'Tøj',nl:'Kleding',csb:'Òbleczëzna'},Samochód:{en:'Car',de:'Auto',it:'Auto',fr:'Voiture',es:'Coche',pt:'Carro',sv:'Bil',no:'Bil',da:'Bil',nl:'Auto',csb:'Mòtór'},Zegarki:{en:'Watches',de:'Uhren',it:'Orologi',fr:'Montres',es:'Relojes',pt:'Relógios',sv:'Klockor',no:'Klokker',da:'Ure',nl:'Horloges',csb:'Zegarkòwi'},Amunicja:{en:'Ammunition',de:'Munition',it:'Munizioni',fr:'Munitions',es:'Munición',pt:'Munição',sv:'Ammunition',no:'Ammunisjon',da:'Ammunition',nl:'Munitie',csb:'Amunicjô'},Broń:{en:'Weapons',de:'Waffen',it:'Armi',fr:'Armes',es:'Armas',pt:'Armas',sv:'Vapen',no:'Våpen',da:'Våben',nl:'Wapens',csb:'Bron'},'Gry na konsole':{en:'Console games',de:'Konsolenspiele',it:'Giochi console',fr:'Jeux console',es:'Juegos de consola',pt:'Jogos de consola',sv:'Konsolspel',no:'Konsollspill',da:'Konsolspil',nl:'Consolespellen',csb:'Grë na konsolë'},'RTV AGD':{en:'Home appliances',de:'TV & Haushalt',it:'TV & elettrodomestici',fr:'TV & électroménager',es:'TV y hogar',pt:'TV e eletrodomésticos',sv:'TV & vitvaror',no:'TV og hvitevarer',da:'TV og hvidevarer',nl:'TV & huishoudelijk',csb:'RTV AGD'},Elektronika:{en:'Electronics',de:'Elektronik',it:'Elettronica',fr:'Électronique',es:'Electrónica',pt:'Eletrónica',sv:'Elektronik',no:'Elektronikk',da:'Elektronik',nl:'Elektronica',csb:'Elektronika'},Restauracje:{en:'Restaurants',de:'Restaurants',it:'Ristoranti',fr:'Restaurants',es:'Restaurantes',pt:'Restaurantes',sv:'Restauranger',no:'Restauranter',da:'Restauranter',nl:'Restaurants',csb:'Restauracjô'},Jedzenie:{en:'Food',de:'Lebensmittel',it:'Cibo',fr:'Alimentation',es:'Comida',pt:'Alimentação',sv:'Mat',no:'Mat',da:'Mad',nl:'Eten',csb:'Żëwnosc'},Rower:{en:'Bicycle',de:'Fahrrad',it:'Bicicletta',fr:'Vélo',es:'Biciclette',pt:'Bicicleta',sv:'Cykel',no:'Sykkel',da:'Cykel',nl:'Fiets',csb:'Rower'},'Usługi różne':{en:'Other services',de:'Sonstige Dienstleistungen',it:'Servizi vari',fr:'Services divers',es:'Servicios varios',pt:'Serviços diversos',sv:'Övriga tjänster',no:'Andre tjenester',da:'Andre tjenester',nl:'Diverse diensten',csb:'Różné ùsłëdżi'},'Leki / Lekarz':{en:'Medicine / Doctor',de:'Medikamente / Arzt',it:'Farmaci / Medico',fr:'Médicaments / Médecin',es:'Medicamentos / Médico',pt:'Medicamentos / Médico',sv:'Läkemedel / Läkare',no:'Medisiner / Lege',da:'Medicin / Læge',nl:'Medicijnen / Arts',csb:'Lëkarstwa / Doktór'}};return lang==='pl'?cat:((map[cat]||{})[lang]||cat)}
+function monthDisplay(m){const q=parseMonthName(m.name);const names={pl:['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'],en:['January','February','March','April','May','June','July','August','September','October','November','December'],cs:['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'],de:['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],it:['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'],fr:['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'],es:['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'],pt:['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'],sv:['januari','februari','mars','april','maj','juni','juli','augusti','september','oktober','november','december'],no:['januar','februar','mars','april','mai','juni','juli','august','september','oktober','november','desember'],da:['januar','februar','marts','april','maj','juni','juli','august','september','oktober','november','december'],nl:['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'],csb:['stëcznik','gromicznik','strëmiannik','łżëkwiat','maj','czerwińc','lëpińc','zélnik','rujan','miedzérnik','lëstopadnik','gòdnik']};return (names[lang]||names.pl)[q.month]+' '+q.year}
+// Fallback labels for the remaining languages.
+let lang=localStorage.getItem('turbo_bgt_lang')||'pl';
+function t(k){return (LANGS[lang]?.dict?.[k]||LANGS.pl.dict[k]||k)}
+function setupLanguageSelect(){const s=document.getElementById('languageSelect');if(!s)return;s.innerHTML=Object.entries(LANGS).map(([k,v])=>`<option value="${k}">${v.flag} ${v.name}</option>`).join('');s.value=lang}
+function changeLanguage(v){lang=v;localStorage.setItem('turbo_bgt_lang',v);setupLanguageSelect();applyLanguage();render();}
+function applyLanguage(){
+ document.documentElement.lang=LANGS[lang]?.code||'pl-PL';
+ const set=(id,key)=>{const e=document.getElementById(id);if(e)e.textContent=t(key)};
+ set('settingsTitle','settings');set('salaryLabel','salary');set('savingLabel','saving');set('fixedLabel','fixed');set('saveSettingsBtn','saveChanges');set('languageLabel','language');set('deleteMonthTitle','deleteMonth');set('deleteMonthHint','deleteHint');set('deleteMonthBtn','delete');set('editNotice','editNotice');set('lockPassLabel','pass');set('unlockBtn','unlock');set('lockTitle','app');set('tagline','tagline');set('summaryTitle','summaries');set('emptyText','noMonth');set('emptyAddBtn','addMonthAfter');set('navStart','start');set('navIncome','income');set('navExpense','expense');set('navSummary','summary');set('navMonths','months');set('navOptions','options');
+ const map=[['newPayTitle','newPay'],['mMonthLabel','month'],['mYearLabel','year'],['mStartLabel','startDay'],['mSalaryLabel','salary'],['mSaveLabel','saving'],['mFixedLabel','fixed'],['mCreateBtn','createMonth'],['fixedTitle','fixedTitle'],['fNameLabel','name'],['fAddBtn','addFee'],['incomeTitle','incomeTitle'],['iAmountLabel','amount'],['iDescLabel','description'],['iModeLabel','whatToDo'],['iBudgetOpt','toBudget'],['iSaveOpt','toSavings'],['iSaveBtn','saveIncome'],['expenseTitle','expenseTitle'],['eWeekLabel','weekLabel'],['eAmountLabel','amount'],['eWhatLabel','what'],['eCatLabel','category'],['eSaveBtn','saveExpense']];map.forEach(([id,k])=>set(id,k));
+ const p=document.getElementById('pass'); if(p)p.placeholder=t('pass');
+ const lm=document.querySelector('#lockbox .sub'); if(lm)lm.textContent=t('lockHint');
+ setupLanguageSelect();
+ const setAttr=(id,attr,key)=>{const e=document.getElementById(id);if(e)e[attr]=t(key)};
+ setAttr('eAmount','placeholder','amount');setAttr('eDesc','placeholder','what');setAttr('iAmount','placeholder','amount');setAttr('iDesc','placeholder','description');
+ const bo=document.getElementById('iBudgetOpt');if(bo)bo.textContent=t('toBudget');const so=document.getElementById('iSaveOpt');if(so)so.textContent=t('toSavings');
+ const mn=document.getElementById('monthRuleNotice');if(mn)mn.innerHTML=`${t('week')} 1, ${t('week')} 2, ${t('week')} 3… ${t('cycle')}.`;
+ const ms=document.getElementById('monthSavingNotice');if(ms)ms.textContent=t('editNotice');
+ const inn=document.getElementById('incomeNotice');if(inn)inn.textContent=t('toBudget');
+}
+const KEY="budzet_secure_v18";let state=null,currentMonth=null,key=null;
+const money=n=>new Intl.NumberFormat(LANGS[lang]?.code||'pl-PL',{style:'currency',currency:'PLN',maximumFractionDigits:2}).format(n||0);
+async function derive(p,s){return crypto.subtle.deriveKey({name:"PBKDF2",salt:s,iterations:250000,hash:"SHA-256"},await crypto.subtle.importKey("raw",new TextEncoder().encode(p),"PBKDF2",false,["deriveKey"]),{name:"AES-GCM",length:256},false,["encrypt","decrypt"])}
+function b64(a){return btoa(String.fromCharCode(...new Uint8Array(a)))}function ub64(s){return Uint8Array.from(atob(s),c=>c.charCodeAt(0))}
+async function encrypt(obj){let iv=crypto.getRandomValues(new Uint8Array(12));let enc=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,new TextEncoder().encode(JSON.stringify(obj)));return JSON.stringify({iv:b64(iv),data:b64(enc)})}
+async function decrypt(raw){let x=JSON.parse(raw);let dec=await crypto.subtle.decrypt({name:"AES-GCM",iv:ub64(x.iv)},key,ub64(x.data));return JSON.parse(new TextDecoder().decode(dec))}
+async function unlock(){
+ let p=document.getElementById("pass").value;if(p.length<4){document.getElementById("lockmsg").textContent="Hasło/PIN musi mieć co najmniej 4 znaki.";return}
+ let saved=localStorage.getItem(KEY);
+ try{
+  if(saved){let meta=JSON.parse(saved),salt=ub64(meta.salt);key=await derive(p,salt);state=await decrypt(meta.payload)}
+  else{let salt=crypto.getRandomValues(new Uint8Array(16));key=await derive(p,salt);state={pool:0,months:[]};localStorage.setItem(KEY,JSON.stringify({salt:b64(salt),payload:await encrypt(state)}))}
+  document.getElementById("lock").style.display="none";document.getElementById("app").style.display="block";applyLanguage();render();
+ }catch(e){document.getElementById("lockmsg").textContent="Nieprawidłowe hasło/PIN.";document.getElementById("pass").value=""}
+}
+async function save(){let meta=JSON.parse(localStorage.getItem(KEY));meta.payload=await encrypt(state);localStorage.setItem(KEY,JSON.stringify(meta));render()}
+async function resetSavings(){if(!state)return;if(state.pool<=0)return alert("Pula oszczędności już wynosi 0 zł.");if(!confirm("Wyzerować całą pulę oszczędności? Tej operacji nie można cofnąć."))return;state.pool=0;await save()}
+
+function fixedTotal(m){return (m.fixedItems||[]).reduce((a,x)=>a+x.amount,0)}
+function baseSpendBudget(m){
+  // Kwota, którą można wydać bez ruszania oszczędności:
+  // wypłata - cel oszczędności - stałe opłaty + przeniesienie/dodatkowe wpływy.
+  return Math.max(0,(m.salary||0)-(m.saving||0)-fixedTotal(m)+(m.carryIn||0)+(m.extraBudget||0));
+}
+function monthSpent(m){return (m.expenses||[]).filter(e=>e.source!=='savings').reduce((a,e)=>a+Number(e.amount||0),0)}
+function savingsUsedForMonth(m){
+  // Oszczędności są ruszane dopiero po rozliczeniu wszystkich tygodni:
+  // najpierw nadwyżki z DOWOLNYCH dodatnich tygodni pokrywają wszystkie
+  // tygodniowe przekroczenia. Dopiero brakująca różnica schodzi z puli oszczędności.
+  let surplus=0, deficit=0;
+  (m.periods||[]).forEach(p=>{
+    const raw=Number(p.budget||0)-spentForPeriod(m,p.week);
+    if(raw>=0) surplus+=raw; else deficit+=-raw;
+  });
+  return Math.max(0,deficit-surplus);
+}
+async function syncSavingsForMonth(m){
+  // Pula jest prawdziwym saldem rezerwowym. Każda zmiana wydatków
+  // powoduje pobranie/przywrócenie dokładnej różnicy.
+  const old=Number(m.savingsUsed||0);
+  const now=savingsUsedForMonth(m);
+  const delta=now-old;
+  if(Math.abs(delta)>0.005){
+    state.pool=Math.max(0,Number(state.pool||0)-delta);
+  }
+  m.savingsUsed=now;
+}
+function recalcMonth(m){
+  m.fixed=fixedTotal(m);
+  m.totalBudget=baseSpendBudget(m);
+  if(m.periods){
+    let per=m.totalBudget/m.periods.length;
+    m.periods.forEach(p=>p.budget=per);
+  }
+}
+function ensureMonth(m){
+  if(!m.incomes)m.incomes=[];
+  if(!m.fixedItems){
+    m.fixedItems=[
+      {id:Date.now()+1,name:"Czynsz",amount:m.fixed||0},
+      {id:Date.now()+2,name:"Garaż",amount:0}
+    ].filter(x=>x.amount>0 || x.name==="Czynsz" || x.name==="Garaż");
+  }
+  if(m.extraBudget==null)m.extraBudget=0;
+  if(m.savingsUsed==null)m.savingsUsed=0;
+  if(m.closed==null)m.closed=false;
+  recalcMonth(m);
+}
+function openEditMonth(){
+ let m=state.months.find(x=>x.id===currentMonth);
+ if(!m){document.getElementById("xSalary").value="";document.getElementById("xSave").value="";document.getElementById("xFixed").value="";document.getElementById("deleteMonthBtn").disabled=true;document.getElementById("editMonthModal").style.display="flex";return;}
+ document.getElementById("deleteMonthBtn").disabled=false;ensureMonth(m);
+ document.getElementById("xSalary").value=m.salary;
+ document.getElementById("xSave").value=m.saving;
+ document.getElementById("xFixed").value=m.fixed;
+ document.getElementById("editMonthModal").style.display="flex";
+}
+async function editMonth(){
+ let m=state.months.find(x=>x.id===currentMonth);if(!m)return alert(t("noMonth"));
+ let ns=+document.getElementById("xSalary").value||0, nsave=+document.getElementById("xSave").value||0, nf=+document.getElementById("xFixed").value||0;
+ state.pool += nsave-m.saving;
+ m.salary=ns;m.saving=nsave;
+ ensureMonth(m);
+ let delta=nf-m.fixed;
+ if(Math.abs(delta)>0.005){
+   let adj=m.fixedItems.find(x=>x.name==="Korekta stałych");
+   if(adj) adj.amount+=delta; else m.fixedItems.push({id:Date.now(),name:"Korekta stałych",amount:delta});
+ }
+ m.fixed=fixedTotal(m);
+ m.totalBudget=baseSpendBudget(m);
+ if(m.periods){let per=m.totalBudget/m.periods.length;m.periods.forEach(p=>p.budget=per)}
+ await syncSavingsForMonth(m);await save();closeModal("editMonthModal");
+}
+function openFixed(){
+ let m=state.months.find(x=>x.id===currentMonth);ensureMonth(m);
+ renderFixed();document.getElementById("fixedModal").style.display="flex";
+}
+function renderFixed(){
+ let m=state.months.find(x=>x.id===currentMonth);ensureMonth(m);
+ document.getElementById("fixedList").innerHTML=m.fixedItems.map(x=>`<div class="expense"><div><b>${x.name}</b><div class="small">stała opłata</div></div><div class="row"><span class="money">${money(x.amount)}</span><button class="danger" style="padding:6px 9px;margin-left:7px" onclick="delFixed(${x.id})">×</button></div></div>`).join("");
+}
+async function addFixed(){
+ let m=state.months.find(x=>x.id===currentMonth),name=document.getElementById("fName").value.trim(),amount=+document.getElementById("fAmount").value||0;
+ if(!name||amount<=0)return alert("Podaj nazwę i kwotę.");
+ ensureMonth(m);m.fixedItems.push({id:Date.now(),name,amount});recalcMonth(m);await save();renderFixed();
+ document.getElementById("fName").value="";document.getElementById("fAmount").value="";
+}
+async function delFixed(id){
+ let m=state.months.find(x=>x.id===currentMonth);m.fixedItems=m.fixedItems.filter(x=>x.id!==id);recalcMonth(m);await save();renderFixed();
+}
+function openIncome(){document.getElementById("iAmount").value="";document.getElementById("iDesc").value="";document.getElementById("incomeModal").style.display="flex"}
+async function addIncome(){
+ let m=state.months.find(x=>x.id===currentMonth),amount=+document.getElementById("iAmount").value||0,desc=document.getElementById("iDesc").value.trim()||"Dodatkowa wpłata",mode=document.getElementById("iMode").value;
+ if(amount<=0)return alert("Podaj kwotę.");
+ ensureMonth(m);m.incomes.push({id:Date.now(),amount,desc,date:new Date().toLocaleDateString("pl-PL"),mode});
+ if(mode==="saving")state.pool+=amount;else{m.extraBudget=(m.extraBudget||0)+amount;recalcMonth(m)}
+ await save();closeModal("incomeModal");
+}
+function openMonth(){
+ const now=new Date(), ms=["Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
+ const mm=document.getElementById("mMonth"), yy=document.getElementById("mYear");
+ const monthNames={pl:ms,en:["January","February","March","April","May","June","July","August","September","October","November","December"],cs:["leden","únor","březen","duben","květen","červen","červenec","srpen","září","říjen","listopad","prosinec"],de:["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"],it:["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"],fr:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"],es:["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"],pt:["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"],sv:["januari","februari","mars","april","maj","juni","juli","augusti","september","oktober","november","december"],no:["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"],da:["januar","februar","marts","april","maj","juni","juli","august","september","oktober","november","december"],nl:["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"],csb:["stëcznik","gromicznik","strëmiannik","łżëkwiat","maj","czerwińc","lëpińc","zélnik","rujan","miedzérnik","lëstopadnik","gòdnik"]};mm.innerHTML=(monthNames[lang]||ms).map((x,i)=>`<option value="${i}">${x}</option>`).join("");
+ yy.innerHTML="";
+ for(let y=now.getFullYear()-2;y<=now.getFullYear()+5;y++)yy.innerHTML+=`<option value="${y}">${y}</option>`;
+ mm.value=now.getMonth(); yy.value=now.getFullYear(); document.getElementById("mStartDay").value=10;
+ document.getElementById("monthModal").style.display="flex";
+}
+function closeModal(id){document.getElementById(id).style.display="none"}
+
+function parseMonthName(name){
+ const months={styczeń:0,luty:1,marzec:2,kwiecień:3,maj:4,czerwiec:5,lipiec:6,sierpień:7,wrzesień:8,październik:9,listopad:10,grudzień:11};
+ let m=name.toLowerCase().match(/(styczeń|luty|marzec|kwiecień|maj|czerwiec|lipiec|sierpień|wrzesień|październik|listopad|grudzień)\s+(\d{4})/);
+ if(!m){let d=new Date();return {year:d.getFullYear(),month:d.getMonth()}}
+ return {year:+m[2],month:months[m[1]]};
+}
+function isoWeek(d){
+ let x=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+ let day=x.getUTCDay()||7;x.setUTCDate(x.getUTCDate()+4-day);
+ let start=new Date(Date.UTC(x.getUTCFullYear(),0,1));
+ return Math.ceil((((x-start)/86400000)+1)/7);
+}
+function datePL(d){return d.toLocaleDateString('pl-PL',{day:'2-digit',month:'2-digit'})}
+function makePeriods(year,month,total,startDay=10){
+  let start=new Date(year,month,startDay), end=new Date(year,month+1,10), periods=[], cur=new Date(start), n=1;
+  while(cur<end){
+    let ws=new Date(cur), we=new Date(cur); we.setDate(we.getDate()+6); if(we>=end)we=new Date(end.getTime()-86400000);
+    periods.push({week:n,start:datePL(ws),end:datePL(we),startISO:ws.toISOString(),endISO:we.toISOString()});
+    n++; cur=new Date(we);cur.setDate(cur.getDate()+1);
+  }
+  let per=periods.length?total/periods.length:0; periods.forEach(p=>p.budget=per); return periods;
+}
+function spentForPeriod(m,w){return m.expenses.filter(e=>e.week===w&&e.source!=='savings').reduce((a,e)=>a+e.amount,0)}
+function weekStatuses(m){
+  const out={};
+  const periods=m.periods||[];
+  const buckets=[];
+  const deficits=[];
+
+  // Najpierw liczmy rzeczywiste saldo każdego tygodnia.
+  periods.forEach(p=>{
+    const nominal=Number(p.budget||0);
+    const spent=spentForPeriod(m,p.week);
+    const raw=nominal-spent;
+    out[p.week]={nominal,effective:nominal,spent,over:Math.max(0,-raw),left:Math.max(0,raw),transferredIn:0,transferredOut:0};
+    if(raw>0) buckets.push({week:p.week,amount:raw});
+    if(raw<0) deficits.push({week:p.week,amount:-raw});
+  });
+
+  // Każde przekroczenie może pobrać pieniądze z KAŻDEGO dodatniego
+  // tygodnia — również wcześniejszego. Nie ograniczamy się do tygodni przyszłych.
+  for(const d of deficits){
+    let need=d.amount;
+    for(const b of buckets){
+      if(need<=0) break;
+      if(b.amount<=0 || b.week===d.week) continue;
+      const take=Math.min(b.amount,need);
+      b.amount-=take;
+      need-=take;
+      out[b.week].left-=take;
+      out[b.week].transferredOut+=take;
+      out[d.week].transferredIn+=take;
+    }
+    // Jeśli zabrakło dodatnich tygodni, pozostała część trafia do oszczędności.
+    out[d.week].savingsNeeded=need;
+  }
+  return out;
+}
+function dynamicBudget(m,w){
+  const st=weekStatuses(m)[w];
+  return st ? st.nominal : 0;
+}
+function currentPeriod(m){
+ let now=new Date();
+ return m.periods.find(p=>now>=new Date(p.startISO)&&now<=new Date(p.endISO))||null;
+}
+async function addMonth(){
+ let mi=+document.getElementById("mMonth").value, year=+document.getElementById("mYear").value;
+ let months=["Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
+ let name=months[mi]+" "+year,salary=+document.getElementById("mSalary").value||0,saving=+document.getElementById("mSave").value||0,fixed=+document.getElementById("mFixed").value||0;
+ if(!salary)return alert("Wpisz wypłatę.");
+ let prev=state.months[0];
+ if(prev && !prev.closed)return alert("Najpierw zamknij poprzedni miesiąc. Dopiero wtedy nowa wypłata zostanie dodana do budżetu.");
+ let carry=(prev&&prev.rolloverMode==="2"&&prev.carryForward)?prev.carryForward:0;
+ state.pool+=(saving);
+ let total=Math.max(0,salary-saving-fixed+carry);
+ let startDay=10, periods=makePeriods(year,mi,total,startDay);
+ let m={id:Date.now(),name,salary,saving,fixed,totalBudget:total,carryIn:carry,startDay,startDate:`${year}-${String(mi+1).padStart(2,"0")}-${String(startDay).padStart(2,"0")}`,extraBudget:0,fixedItems:[{id:Date.now()+1,name:"Czynsz",amount:fixed},{id:Date.now()+2,name:"Garaż",amount:0}],incomes:[],periods,expenses:[],closed:false,rollover:0,rolloverMode:null,carryForward:0,savingsUsed:0};
+ state.months.unshift(m);currentMonth=m.id;await save();closeModal("monthModal")
+}
+const CATEGORY_ICONS={"Paliwo":"paliwo.png","Zakupy":"zakupy.png","Ubranie":"ubranie.png","Samochód":"samochod.png","Zegarki":"zegarki.png","Amunicja":"amunicja.png","Broń":"bron.png","Gry na konsole":"gry.png","RTV AGD":"rtv.png","Elektronika":"elektronika.png","Restauracje":"restauracje.png","Jedzenie":"jedzenie.png","Rower":"rower.png","Usługi różne":"uslugi.png","Leki / Lekarz":"leki_lekarz.png"};
+const CATEGORIES=Object.keys(CATEGORY_ICONS);
+function categoryIcon(cat){return './icons/'+(CATEGORY_ICONS[cat]||'paliwo.png')}
+function toggleCategoryPicker(){let p=document.getElementById('categoryPicker');if(!p.innerHTML)renderCategoryPicker();p.style.display=p.style.display==='grid'?'none':'grid'}
+function renderCategoryPicker(){let p=document.getElementById('categoryPicker');let cur=document.getElementById('eCat').value;p.innerHTML=CATEGORIES.map(c=>`<button type="button" class="catoption ${c===cur?'active':''}" onclick="selectCategory('${c.replace(/'/g,"\\'")}')"><img src="${categoryIcon(c)}" onerror="this.style.display='none'"><span>${catLabel(c)}</span></button>`).join('')}
+function selectCategory(cat){document.getElementById('eCat').value=cat;document.getElementById('selectedCat').innerHTML=`<img src="${categoryIcon(cat)}" onerror="this.style.display='none'"><span><b>${catLabel(cat)}</b><small class="small">${t('selected')}</small></span><span style="margin-left:auto;font-size:20px">⌃</span>`;renderCategoryPicker();document.getElementById('categoryPicker').style.display='none';toggleServiceDescription()}
+function toggleServiceDescription(){let cat=document.getElementById("eCat").value;document.getElementById("serviceHint").style.display=cat==="Usługi różne"?"block":"none"}
+function openExpense(){let m=state.months.find(x=>x.id===currentMonth);if(!m||m.closed)return alert("Ten miesiąc jest zamknięty.");let s=document.getElementById("eWeek");s.innerHTML="";m.periods.forEach(p=>s.innerHTML+=`<option value="${p.week}">${t('week')} ${p.week} • ${p.start}–${p.end}</option>`);let cp=currentPeriod(m);if(cp)s.value=cp.week;document.getElementById("eAmount").value="";document.getElementById("eDesc").value="";document.getElementById("eSource").value="budget";updateExpenseSourceUI();selectCategory("Paliwo");document.getElementById("expenseModal").style.display="flex"}
+async function addExpense(){
+ let m=state.months.find(x=>x.id===currentMonth),amount=+document.getElementById("eAmount").value||0;
+ if(amount<=0)return alert("Wpisz kwotę.");
+ let source=document.getElementById("eSource").value;
+ if(source==="savings" && Number(state.pool||0)<amount)return alert("W puli oszczędności nie ma wystarczających środków.");
+ let cat=document.getElementById("eCat").value,desc=document.getElementById("eDesc").value.trim()||"Wydatek";
+ if(cat==="Usługi różne"&&!desc)return alert("Przy kategorii „Usługi różne” wpisz opis usługi.");
+ m.expenses.push({id:Date.now(),amount,desc,cat,week:+document.getElementById("eWeek").value,date:new Date().toLocaleDateString("pl-PL"),source});
+ if(source==="savings") state.pool=Math.max(0,Number(state.pool||0)-amount);
+ await syncSavingsForMonth(m);await save();closeModal("expenseModal");
+}
+function updateExpenseSourceUI(){
+ const s=document.getElementById("eSource");
+ const n=document.getElementById("eSourceNotice");
+ if(!s||!n)return;
+ n.textContent=s.value==="savings"?t('sourceSavingsHint'):t('sourceBudgetHint');
+}
+
+async function delExpense(id){let m=state.months.find(x=>x.id===currentMonth);let e=m.expenses.find(x=>x.id===id);if(e&&e.source==="savings")state.pool+=Number(e.amount||0);m.expenses=m.expenses.filter(e=>e.id!==id);await syncSavingsForMonth(m);await save()}
+async function closeMonth(){
+ let m=state.months.find(x=>x.id===currentMonth);if(m.closed)return;
+ await syncSavingsForMonth(m);
+ let spent=monthSpent(m),left=Math.max(0,m.totalBudget-spent);
+ let choice=prompt("Koniec miesiąca. Niewydane: "+money(left)+"\nWpisz: 1 = oszczędności, 2 = przenieś do następnego miesiąca", "1");
+ if(choice!=="1"&&choice!=="2")return;
+ if(choice==="1")state.pool+=left;
+ m.closed=true;m.rollover=left;m.rolloverMode=choice;m.carryForward=choice==="2"?left:0;
+ await save();
+}
+async function deleteMonth(){
+ let m=state.months.find(x=>x.id===currentMonth);if(!m)return;
+ if(!confirm(`${t('deleteMonth')} „${m.name}”?`))return;
+ // Cofnij wpływ tego miesiąca na realną pulę: jego cel oszczędności był wpłatą,
+ // a ewentualne przekroczenia już tę pulę zmniejszyły.
+ state.pool=Math.max(0,Number(state.pool||0)-Number(m.saving||0)+Number(m.savingsUsed||0));
+ state.months=state.months.filter(x=>x.id!==m.id);currentMonth=state.months[0]?.id||null;await save();closeModal('editMonthModal');
+}
+function selectMonth(id){currentMonth=id;render()}
+function chart(m){let cats={};m.expenses.forEach(e=>cats[e.cat]=(cats[e.cat]||0)+Number(e.amount||0));let arr=Object.entries(cats),c=document.getElementById("chart");if(!c)return;let x=c.getContext("2d"),d=devicePixelRatio||1,w=c.clientWidth||500,h=210;c.width=w*d;c.height=h*d;x.scale(d,d);x.clearRect(0,0,w,h);let colors=["#ff2da8","#19e7ff","#ff9d3d","#2df5a8","#9a55ff","#ffd447","#ff5c75","#4dd0e1","#b388ff","#7cf29a","#ff8a65","#64b5f6","#f06292","#81c784","#ba68c8"],max=Math.max(...arr.map(a=>a[1]),1),bw=Math.max(22,(w-36)/Math.max(arr.length,1)-9);x.font="10px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif";arr.forEach((a,i)=>{let bh=(a[1]/max)*140,xx=18+i*((w-28)/Math.max(arr.length,1));x.fillStyle=colors[i%colors.length];x.shadowBlur=12;x.shadowColor=x.fillStyle;x.fillRect(xx,h-40-bh,bw,bh);x.shadowBlur=0;x.fillStyle="#e8ddff";x.fillText(a[0].slice(0,10),xx,h-20);x.fillText(Math.round(a[1])+" zł",xx,h-45-bh)})}
+function toggleSummary(){let p=document.getElementById("summaryPanel");p.open=!p.open;if(p.open)renderSummary()}
+function renderSummary(){
+ let box=document.getElementById("summaryContent"); if(!state||!state.months.length){box.innerHTML="${t('noData')}";return}
+ let months=state.months.map(m=>{let q=parseMonthName(m.name);return {...m,_year:q.year,_month:q.month}});
+ let years={}; months.forEach(m=>{let y=m._year; if(!years[y])years[y]={salary:0,saving:0,fixed:0,spent:0,extra:0,count:0}; years[y].salary+=m.salary||0;years[y].saving+=m.saving||0;years[y].fixed+=m.fixed||0;years[y].spent+=(m.expenses||[]).reduce((a,e)=>a+e.amount,0);years[y].extra+=(m.extraBudget||0);years[y].count++});
+ let yearHtml=Object.entries(years).sort((a,b)=>b[0]-a[0]).map(([y,v])=>`<div class="summaryitem"><b>${y}</b><br>${t('salary')}: ${money(v.salary)}<br>${t('savings')}: ${money(v.saving)}<br>${t('fixed')}: ${money(v.fixed)}<br>${t('spent')}: ${money(v.spent)}<br>${t('months')}: ${v.count}</div>`).join('');
+ let monthHtml=months.sort((a,b)=>{let da=new Date(a._year,a._month,1),db=new Date(b._year,b._month,1);return db-da}).map(m=>{let spent=(m.expenses||[]).reduce((a,e)=>a+e.amount,0),left=Math.max(0,(m.totalBudget||0)-spent);return `<div class="summaryitem"><b>${monthDisplay(m)}</b><br>${t('weekBudget')}: ${money(m.totalBudget||0)}<br>${t('spent')}: ${money(spent)}<br>${t('left')}: ${money(left)}<br>${t('savings')}: ${money(m.saving||0)}</div>`}).join('');
+ let weeks=[];months.forEach(m=>(m.periods||[]).forEach(p=>weeks.push({m,p,spent:spentForPeriod(m,p.week),budget:dynamicBudget(m,p.week)})));
+ let weekHtml=weeks.slice(-12).reverse().map(x=>`<div class="summaryitem"><b>${monthDisplay(x.m)} · ${t('week').toLowerCase()} ${x.p.week}</b><br>Budżet: ${money(x.budget)}<br>${t('spent')}: ${money(x.spent)}<br>${t('left')}: ${money(Math.max(0,x.budget-x.spent))}</div>`).join('');
+ box.innerHTML=`<div class="small" style="margin-bottom:10px">${t('summaries')}</div><h3>${t('yearTitle')}</h3><div class="summarygrid">${yearHtml}</div><h3>${t('monthsTitle')}</h3><div class="summarygrid">${monthHtml}</div><h3>${t('weeksTitle')}</h3><div class="summarygrid">${weekHtml||`<div>${t('noWeeks')}</div>`}</div>`;
+}
+
+function render(){if(!state)return;let area=document.getElementById("monthArea");if(!state.months.length){area.innerHTML="";document.getElementById("empty").style.display="block";return}document.getElementById("empty").style.display="none";if(!currentMonth)currentMonth=state.months[0].id;let m=state.months.find(x=>x.id===currentMonth)||state.months[0];ensureMonth(m);if(!m.periods){let p=parseMonthName(m.name);m.totalBudget=baseSpendBudget(m);m.periods=makePeriods(p.year,p.month,m.totalBudget,10)}let cp=currentPeriod(m),spent=monthSpent(m),usedSavings=savingsUsedForMonth(m),cw=cp?spentForPeriod(m,cp.week):0,cb=cp?dynamicBudget(m,cp.week):0,cleft=cp?(weekStatuses(m)[cp.week]?.left||0):0,tabs=state.months.map(x=>`<button class="tab ${x.id===m.id?'active':''}" onclick="selectMonth(${x.id})">${monthDisplay(x)}</button>`).join(""),weeks="";const wsAll=weekStatuses(m);m.periods.forEach(p=>{let ws=wsAll[p.week]||{effective:p.budget||0,spent:spentForPeriod(m,p.week),over:0,left:0},used=ws.spent,budget=ws.effective,left=ws.left,isCurrent=cp&&cp.week===p.week,over=ws.over,pct=budget>0?Math.min(100,used/budget*100):0;weeks+=`<div class="card week ${isCurrent?'current':''} ${over>0?'over':''}"><div class="row"><div class="weeknum">${t('week')}<br><b style="font-size:22px">${p.week}</b><br><span class="small">${p.start} – ${p.end}</span></div><div class="weekbody"><div class="row"><div><b>${t('weekBudget')}: ${money(budget)}</b><div class="stat">${t('spent')}: ${money(used)}</div></div><span class="money ${left<0?'red':'green'}">${money(left)}</span></div><div class="progress"><div class="bar ${over>0?'overbar':''}" style="width:${pct}%"></div></div>${over>0?`<div class="overbox"><span class="warningicon">⚠</span><span>${t('over')}<br><small style="font-size:12px">${t('excess')} ${money(over)}</small></span></div>`:''}</div></div>${m.expenses.filter(e=>e.week===p.week).map(e=>`<div class="expense"><div class="expense-main"><img class="expense-icon" src="${categoryIcon(e.cat)}" onerror="this.style.display='none'"><div><b>${e.desc}</b><div class="small">${catLabel(e.cat)} · ${e.date}${e.source==="savings"?` · <span class="pink">🐷 ${t('savingsSource')}</span>`:` · <span class="cyan">💳 ${t('currentPool')}</span>`}</div></div></div><div class="row"><span class="money">${money(e.amount)}</span><button class="danger" style="padding:6px 9px" onclick="delExpense(${e.id})">×</button></div></div>`).join("")||`<div class="small" style="margin-top:10px">${t('noExpenses')}</div>`}</div>`});let remaining=Math.max(0,m.totalBudget-spent),progress=m.totalBudget>0?Math.min(100,spent/m.totalBudget*100):0;area.innerHTML=`<div class="row" style="margin-top:12px"><div class="tabs" id="monthTabs">${tabs}</div><button class="secondary" onclick="openMonth()" style="white-space:nowrap">${t('addMonth')}</button></div><div class="card"><div class="row"><div><div class="cycle">📅 ${m.startDate.split('-').reverse().join('.')} – cykl 10→10</div><div class="sub">${m.closed?t('closedCycle'):t('currentCycle')}</div></div><span class="sub">${monthDisplay(m)}</span></div><div class="statgrid"><div class="statcard"><div class="statlabel">${t('doSpend')}</div><div class="statvalue cyan">${money(Math.max(0,cleft))}</div><div class="sub">${t('thisWeek')}</div></div><div class="statcard"><div class="statlabel">${t('pool')}</div><div class="statvalue pink">${money(state.pool)}</div><div class="sub">${t('growing')}</div></div><div class="statcard"><div class="statlabel">${t('spentTotal')}</div><div class="statvalue gold">${money(spent)}</div><div class="sub">z ${money(m.totalBudget)}</div></div><div class="statcard"><div class="statlabel">${t('progress')}</div><div class="statvalue cyan">${Math.round(progress)}%</div><div class="sub">cyklu</div></div></div><div class="actionsbar"><button onclick="openExpense()">${t('addExpense')}</button><button class="secondary" onclick="openIncome()">${t('incomeGoal')}</button><button class="secondary" onclick="openFixed()">${t('fixedFees')}</button><button class="secondary wide" onclick="${m.closed?'alert(\'Miesiąc jest już zamknięty.\')':'closeMonth()'}">${m.closed?t('monthClosed'):t('closeMonth')}</button></div><div class="notice"><b>${t('pay')}:</b> ${money(m.salary)} · <b>${t('savings')}:</b> ${money(m.saving)} · <b>${t('fixed')}:</b> ${money(m.fixed)}<br><b>${t('budgetLife')}:</b> ${money(m.totalBudget)} · <b>${t('left')}:</b> ${money(remaining)}${usedSavings>0?`<br><span class="red"><b>${t('withdrawn')}:</b> ${money(usedSavings)}</span>`:''}</div><div class="chartwrap"><div class="sectiontitle">${t('chart')}</div><canvas id="chart"></canvas></div><div class="grid" style="margin-top:10px"><button class="secondary" onclick="openEditMonth()">${t('editPay')}</button><button class="secondary" onclick="resetSavings()">${t('resetPool')}</button></div></div>${weeks}`;setTimeout(()=>chart(m),0);if(document.getElementById("summaryPanel")?.open)renderSummary()}function scrollTopApp(){window.scrollTo({top:0,behavior:'smooth'})}function scrollToTabs(){document.getElementById('monthTabs')?.scrollIntoView({behavior:'smooth',block:'center'})}
+</script>
+<script>setupLanguageSelect();</script>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js");</script>
+</body></html>
